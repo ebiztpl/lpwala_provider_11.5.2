@@ -48,6 +48,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   bool isRemember = getBoolAsync(IS_REMEMBERED);
   String? selectedUserTypeValue;
+  String _groupValue = 'provider';
 
   @override
   void initState() {
@@ -163,6 +164,15 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  /*Widget _myRadioButton({required String title, required int value,Function? onChanged}) {
+    return RadioListTile(
+      value: value,
+      groupValue: _groupValue,
+      onChanged: onChanged,
+      title: Text(title),
+    );
+  }*/
+
   //endregion
 
   //region Methods
@@ -208,7 +218,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void _handleLoginWithOtpUsers() async {
     hideKeyboard(context);
     Map<String, dynamic> request = {
-      'user_type': selectedUserTypeValue,
+      'user_type': _groupValue,
       'contact_number': mobileCont.text.trim(),
     };
 
@@ -331,8 +341,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             maxLength: 15,
                             suffix: ic_calling.iconImage(size: 10).paddingAll(14),
                           ),
-                          16.height,
-                          DropdownButtonFormField<String>(
+                          //16.height,
+                          /*DropdownButtonFormField<String>(
                             items: [
                               DropdownMenuItem(
                                 child: Text(languages.provider, style: primaryTextStyle()),
@@ -365,13 +375,59 @@ class _SignInScreenState extends State<SignInScreen> {
                                 log(e.toString());
                               });
                             },
+                          ),*/
+                        ],
+                      ),
+                    ),
+                    //_buildForgotRememberWidget(),
+                    16.height,
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text('User Role', style: boldTextStyle(color: primaryColor, size: 12)).paddingLeft(8),
+                          //Text('User Role', style: TextStyle(fontSize: 14)),
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 1,
+                                      child: RadioListTile(
+                                        value: 'provider',
+                                        groupValue: _groupValue,
+                                        title:  Text('Provider', style: boldTextStyle(color: primaryColor, size: 14)),
+                                        onChanged: (newValue) =>
+                                            setState(() => _groupValue = newValue!),
+                                        activeColor: primaryColor,
+                                        selected: false,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: RadioListTile(
+                                        value: 'handyman',
+                                        groupValue: _groupValue,
+                                        title: Text('Handyman', style: boldTextStyle(color: primaryColor, size: 14)),
+                                        onChanged: (newValue) =>
+                                            setState(() => _groupValue = newValue!),
+                                        activeColor: primaryColor,
+                                        selected: false,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    _buildForgotRememberWidget(),
+                    64.height,
                     _buildButtonWidget(),
-                    16.height,
+                    /*16.height,
                     SnapHelperWidget<bool>(
                       future: isIqonicProduct,
                       onSuccess: (data) {
@@ -390,7 +446,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         }
                         return Offstage();
                       },
-                    ),
+                    ),*/
                   ],
                 ),
               ),

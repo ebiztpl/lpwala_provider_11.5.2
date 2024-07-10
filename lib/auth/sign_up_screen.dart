@@ -18,6 +18,9 @@ import 'package:handyman_provider_flutter/utils/model_keys.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:url_launcher/url_launcher.dart' as launch;
 
+import 'otp_loginnew_screen.dart';
+import 'otp_signup_screen.dart';
+
 bool isNew = false;
 
 class SignUpScreen extends StatefulWidget {
@@ -47,6 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   FocusNode designationFocus = FocusNode();
 
   String? selectedUserTypeValue;
+  String _groupValue = 'provider';
 
   List<UserTypeData> userTypeList = [UserTypeData(name: languages.selectUserType, id: -1)];
   UserTypeData? selectedUserTypeData;
@@ -88,7 +92,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   //region New Logic
   String buildMobileNumber() {
-    return '${selectedCountry.phoneCode}-${mobileCont.text.trim()}';
+    return '${mobileCont.text.trim()}';
+    //return '${selectedCountry.phoneCode}-${mobileCont.text.trim()}';
   }
 
   @override
@@ -232,6 +237,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
             });
           },
         ),
+       /* 16.height,
+        Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Text('User Role', style: boldTextStyle(color: primaryColor, size: 12)).paddingLeft(8),
+              //Text('User Role', style: TextStyle(fontSize: 14)),
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 1,
+                          child: RadioListTile(
+                            value: 'provider',
+                            groupValue: _groupValue,
+                            title:  Text('Provider', style: boldTextStyle(color: primaryColor, size: 14)),
+                            onChanged: (newValue) =>
+                                setState(() => _groupValue = newValue!),
+                            activeColor: primaryColor,
+                            selected: false,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: RadioListTile(
+                            value: 'handyman',
+                            groupValue: _groupValue,
+                            title: Text('Handyman', style: boldTextStyle(color: primaryColor, size: 14)),
+                            onChanged: (newValue) =>
+                                setState(() => _groupValue = newValue!),
+                            activeColor: primaryColor,
+                            selected: false,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),*/
         16.height,
         DropdownButtonFormField<UserTypeData>(
           onChanged: (UserTypeData? val) {
@@ -259,7 +309,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             },
           ),
         ),
-        16.height,
+        /*16.height,
         AppTextField(
           textFieldType: TextFieldType.PASSWORD,
           controller: passwordCont,
@@ -271,7 +321,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           onFieldSubmitted: (s) {
             saveUser();
           },
-        ),
+        ),*/
         20.height,
         _buildTcAcceptWidget(),
         8.height,
@@ -367,7 +417,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           UserKeys.firstName: fNameCont.text.trim(),
           UserKeys.lastName: lNameCont.text.trim(),
           UserKeys.userName: userNameCont.text.trim(),
-          UserKeys.userType: selectedUserTypeValue,
+          UserKeys.userType: _groupValue,
           UserKeys.contactNumber: buildMobileNumber(),
           UserKeys.email: emailCont.text.trim(),
           UserKeys.password: passwordCont.text.trim(),
@@ -375,7 +425,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           UserKeys.status: 0,
         };
 
-        if (selectedUserTypeValue == USER_TYPE_PROVIDER) {
+        if (_groupValue == USER_TYPE_PROVIDER) {
           request.putIfAbsent(UserKeys.providerTypeId, () => selectedUserTypeData!.id.toString());
         } else {
           request.putIfAbsent(UserKeys.handymanTypeId, () => selectedUserTypeData!.id.toString());
@@ -386,7 +436,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         await registerUser(request).then((userRegisterData) async {
           appStore.setLoading(false);
           toast(userRegisterData.message.validate());
-          push(SignInScreen(), isNewTask: true, pageRouteAnimation: PageRouteAnimation.Fade);
+          OTPSignupScreen(otp: userRegisterData.data?.otp.toString(), mobileNumber: userRegisterData.data?.contactNumber.toString(), userType: userRegisterData.data?.userType,).launch(context);
+          //push(SignInScreen(), isNewTask: true, pageRouteAnimation: PageRouteAnimation.Fade);
         }).catchError((e) {
           toast(e.toString(), print: true);
           appStore.setLoading(false);

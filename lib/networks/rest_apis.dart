@@ -61,6 +61,7 @@ import '../models/addons_service_response.dart';
 import '../models/google_places_model.dart';
 import '../models/login_with_otp_response.dart';
 import '../models/my_bid_response.dart';
+import '../models/signup_with_otp.dart';
 import '../models/wallet_history_list_response.dart';
 import '../provider/jobRequest/models/bidder_data.dart';
 import '../provider/jobRequest/models/post_job_data.dart';
@@ -188,6 +189,22 @@ Future<UserData> loginUser(Map request) async {
     throw e;
   }
 }
+
+//by me
+Future<SignupWithOtpResponse> SignUpOtpUser(Map request) async {
+  try {
+    SignupWithOtpResponse res = SignupWithOtpResponse.fromJson(await (handleResponse(await buildHttpResponse('otp-verify-providerhandyman', request: request, method: HttpMethodType.POST))));
+
+    if (res.data != null) {
+      return res;
+    } else {
+      throw errorSomethingWentWrong;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+//by me
 
 Future<LoginWithOtpResponse> loginWithOtpUser(Map request) async {
   try {

@@ -132,7 +132,7 @@ class _ProviderHomeFragmentState extends State<ProviderHomeFragment> {
                     HandymanRecentlyOnlineComponent(images: snap.data!.onlineHandyman.validate()),
                     HandymanListComponent(list: snap.data!.handyman.validate()),
                     UpcomingBookingComponent(bookingData: snap.data!.upcomingBookings.validate()),
-                    JobListComponent(list: snap.data!.myPostJobData.validate()).paddingOnly(left: 16, right: 16, top: 8),
+                    //JobListComponent(list: snap.data!.myPostJobData.validate()).paddingOnly(left: 16, right: 16, top: 8),
                     ServiceListComponent(list: snap.data!.service.validate()),
                   ],
                   onSwipeRefresh: () async {

@@ -49,7 +49,7 @@ class UserData {
   int? isOnline;
   List<String>? userRole;
   ProviderSubscriptionModel? subscription;
-
+  int? otp;
   int? isEmailVerified;
 
   //Local
@@ -143,6 +143,7 @@ class UserData {
     this.isHandymanAvailable,
     this.loginType,
     this.isEmailVerified,
+    this.otp,
   });
 
   UserData.fromJson(Map<String, dynamic> json) {
@@ -190,6 +191,7 @@ class UserData {
     isHandymanAvailable = json['isHandymanAvailable'] != null ? json['isHandymanAvailable'] == 1 : false;
     loginType = json['login_type'];
     isEmailVerified = json['is_email_verified'];
+    otp = json['otp'];
   }
 
   Map<String, dynamic> toJson() {
@@ -242,6 +244,7 @@ class UserData {
       data['subscription'] = this.subscription!.toJson();
     }
     if (this.designation != null) data['designation'] = this.designation;
+    if (this.otp != null) data['otp'] = this.otp;
     return data;
   }
 
