@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:handyman_provider_flutter/main.dart';
@@ -39,6 +40,8 @@ class _ProviderHomeFragmentState extends State<ProviderHomeFragment> {
   }
 
   void init() async {
+    /*String? token = await FirebaseMessaging.instance.getToken();
+    print('FCM_Token=='+token.toString());*/
     future = providerDashboard().whenComplete(() {
       setState(() {});
     });
