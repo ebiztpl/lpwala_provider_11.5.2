@@ -161,7 +161,6 @@ class _ProviderHomeFragmentState extends State<ProviderHomeFragment> {
                     onRetry: () {
                       page = 1;
                       appStore.setLoading(true);
-
                       init();
                       setState(() {});
                     },

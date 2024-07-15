@@ -214,7 +214,7 @@ class ProviderProfileFragmentState extends State<ProviderProfileFragment> {
                         },
                       ),
                     if (appStore.userType != USER_TYPE_HANDYMAN) Divider(height: 0, thickness: 1, indent: 15.0, endIndent: 15.0, color: context.dividerColor),
-                    if (appStore.userType != USER_TYPE_HANDYMAN)
+                   /* if (appStore.userType != USER_TYPE_HANDYMAN)
                       SettingItemWidget(
                         leading: Image.asset(ic_blog, height: 16, width: 16, color: appStore.isDarkMode ? white : gray.withOpacity(0.8)),
                         title: languages.blogs,
@@ -223,7 +223,7 @@ class ProviderProfileFragmentState extends State<ProviderProfileFragment> {
                           BlogListScreen().launch(context);
                         },
                       ),
-                    Divider(height: 0, thickness: 1, indent: 15.0, endIndent: 15.0, color: context.dividerColor),
+                    Divider(height: 0, thickness: 1, indent: 15.0, endIndent: 15.0, color: context.dividerColor),*/
                     SettingItemWidget(
                       leading: Image.asset(handyman, height: 16, width: 16, color: appStore.isDarkMode ? white : gray.withOpacity(0.8)),
                       title: languages.lblAllHandyman,
@@ -272,7 +272,7 @@ class ProviderProfileFragmentState extends State<ProviderProfileFragment> {
                       },
                     ),
                     Divider(height: 0, thickness: 1, indent: 15.0, endIndent: 15.0, color: context.dividerColor),
-                    SettingItemWidget(
+                    /*SettingItemWidget(
                       leading: Image.asset(list, height: 16, width: 16, color: appStore.isDarkMode ? white : gray.withOpacity(0.8)),
                       title: languages.bidList,
                       trailing: Icon(Icons.chevron_right, color: appStore.isDarkMode ? white : gray.withOpacity(0.8), size: 24),
@@ -280,7 +280,7 @@ class ProviderProfileFragmentState extends State<ProviderProfileFragment> {
                         BidListScreen().launch(context);
                       },
                     ),
-                    Divider(height: 0, thickness: 1, indent: 15.0, endIndent: 15.0, color: context.dividerColor),
+                    Divider(height: 0, thickness: 1, indent: 15.0, endIndent: 15.0, color: context.dividerColor),*/
                     SettingItemWidget(
                       leading: Image.asset(ic_tax, height: 18, width: 16, color: appStore.isDarkMode ? white : gray.withOpacity(0.8)),
                       title: languages.lblTaxes,
@@ -318,7 +318,7 @@ class ProviderProfileFragmentState extends State<ProviderProfileFragment> {
                       },
                     ),
                     Divider(height: 0, thickness: 1, indent: 15.0, endIndent: 15.0, color: context.dividerColor),
-                    SettingItemWidget(
+                    /*SettingItemWidget(
                       leading: Image.asset(language, height: 14, width: 16, color: appStore.isDarkMode ? white : gray.withOpacity(0.8)),
                       title: languages.language,
                       trailing: Icon(Icons.chevron_right, color: appStore.isDarkMode ? white : gray.withOpacity(0.8), size: 24),
@@ -326,8 +326,8 @@ class ProviderProfileFragmentState extends State<ProviderProfileFragment> {
                         LanguagesScreen().launch(context);
                       },
                     ),
-                    Divider(height: 0, thickness: 1, indent: 15.0, endIndent: 15.0, color: context.dividerColor),
-                    SettingItemWidget(
+                    Divider(height: 0, thickness: 1, indent: 15.0, endIndent: 15.0, color: context.dividerColor),*/
+                    /*SettingItemWidget(
                       leading: Image.asset(changePassword, height: 18, width: 16, color: appStore.isDarkMode ? white : gray.withOpacity(0.8)),
                       title: languages.changePassword,
                       trailing: Icon(Icons.chevron_right, color: appStore.isDarkMode ? white : gray.withOpacity(0.8), size: 24),
@@ -335,7 +335,7 @@ class ProviderProfileFragmentState extends State<ProviderProfileFragment> {
                         ChangePasswordScreen().launch(context);
                       },
                     ),
-                    Divider(height: 0, indent: 16, endIndent: 16, color: context.dividerColor).visible(appStore.isLoggedIn),
+                    Divider(height: 0, indent: 16, endIndent: 16, color: context.dividerColor).visible(appStore.isLoggedIn),*/
                     SettingItemWidget(
                       leading: Image.asset(about, height: 14, width: 16, color: appStore.isDarkMode ? white : gray.withOpacity(0.8)),
                       title: languages.lblAbout,
