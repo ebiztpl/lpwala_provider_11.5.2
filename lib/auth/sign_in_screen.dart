@@ -338,7 +338,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               ///hintText: '${languages.lblExample}: ${selectedCountry.example}',
                               hintStyle: secondaryTextStyle(),
                             ),
-                            maxLength: 15,
+                            maxLength: 10,
                             suffix: ic_calling.iconImage(size: 10).paddingAll(14),
                           ),
                           //16.height,

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -169,8 +170,11 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     await getAddresses(providerId: appStore.providerId).then((value) {
       serviceAddressList.addAll(value.addressResponse!);
 
-      if (value.addressResponse.validate().any((element) => element.id == getIntAsync(SERVICE_ADDRESS_ID))) {
-        selectedAddress = value.addressResponse!.firstWhere((element) => element.id == getIntAsync(SERVICE_ADDRESS_ID));
+      if (value.addressResponse.validate().any((element) =>
+      element.id == getIntAsync(SERVICE_ADDRESS_ID))) {
+        selectedAddress =
+            value.addressResponse!.firstWhere((element) => element.id ==
+                getIntAsync(SERVICE_ADDRESS_ID));
       }
       setState(() {});
     }).catchError((e) {
@@ -186,7 +190,8 @@ class EditProfileScreenState extends State<EditProfileScreen> {
       countryList.addAll(value);
 
       if (value.any((element) => element.id == getIntAsync(COUNTRY_ID))) {
-        selectedCountry = value.firstWhere((element) => element.id == getIntAsync(COUNTRY_ID));
+        selectedCountry = value.firstWhere((element) => element.id ==
+            getIntAsync(COUNTRY_ID));
       }
       setState(() {});
     }).catchError((e) {
@@ -202,7 +207,8 @@ class EditProfileScreenState extends State<EditProfileScreen> {
       stateList.addAll(value);
 
       if (value.any((element) => element.id == getIntAsync(STATE_ID))) {
-        selectedState = value.firstWhere((element) => element.id == getIntAsync(STATE_ID));
+        selectedState =
+            value.firstWhere((element) => element.id == getIntAsync(STATE_ID));
       }
       setState(() {});
     }).catchError((e) {
@@ -219,7 +225,8 @@ class EditProfileScreenState extends State<EditProfileScreen> {
       cityList.addAll(value);
 
       if (value.any((element) => element.id == getIntAsync(CITY_ID))) {
-        selectedCity = value.firstWhere((element) => element.id == getIntAsync(CITY_ID));
+        selectedCity =
+            value.firstWhere((element) => element.id == getIntAsync(CITY_ID));
       }
       setState(() {});
     }).catchError((e) {
@@ -229,7 +236,8 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<void> update() async {
-    MultipartRequest multiPartRequest = await getMultiPartRequest('update-profile');
+    MultipartRequest multiPartRequest = await getMultiPartRequest(
+        'update-profile');
     multiPartRequest.fields[UserKeys.id] = appStore.userId.toString();
     multiPartRequest.fields[UserKeys.firstName] = fNameCont.text;
     multiPartRequest.fields[UserKeys.lastName] = lNameCont.text;
@@ -241,17 +249,26 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     multiPartRequest.fields[UserKeys.stateId] = stateId.toString();
     multiPartRequest.fields[UserKeys.cityId] = cityId.toString();
     multiPartRequest.fields[CommonKeys.address] = addressCont.text.validate();
-    multiPartRequest.fields[UserKeys.designation] = designationCont.text.validate();
-    multiPartRequest.fields[UserKeys.knownLanguages] = jsonEncode(knownLanguages);
+    multiPartRequest.fields[UserKeys.designation] =
+        designationCont.text.validate();
+    multiPartRequest.fields[UserKeys.knownLanguages] =
+        jsonEncode(knownLanguages);
     multiPartRequest.fields[UserKeys.skills] = jsonEncode(skills);
-    multiPartRequest.fields[UserKeys.whyChooseReason] = jsonEncode(whyChooseMeReasons);
-    multiPartRequest.fields[UserKeys.whyChooseTitle] = whyChooseMeCont.text.trim();
-    multiPartRequest.fields[UserKeys.description] = descriptionCont.text.validate();
-    multiPartRequest.fields[UserKeys.displayName] = '${fNameCont.text.validate() + " " + lNameCont.text.validate()}';
+    multiPartRequest.fields[UserKeys.whyChooseReason] =
+        jsonEncode(whyChooseMeReasons);
+    multiPartRequest.fields[UserKeys.whyChooseTitle] =
+        whyChooseMeCont.text.trim();
+    multiPartRequest.fields[UserKeys.description] =
+        descriptionCont.text.validate();
+    multiPartRequest.fields[UserKeys.displayName] =
+    '${fNameCont.text.validate() + " " + lNameCont.text.validate()}';
 
-    if (isUserTypeHandyman && serviceAddressId != null) multiPartRequest.fields[UserKeys.serviceAddressId] = serviceAddressId.toString();
+    if (isUserTypeHandyman && serviceAddressId != null)
+      multiPartRequest.fields[UserKeys.serviceAddressId] =
+          serviceAddressId.toString();
     if (imageFile != null) {
-      multiPartRequest.files.add(await MultipartFile.fromPath(UserKeys.profileImage, imageFile!.path));
+      multiPartRequest.files.add(
+          await MultipartFile.fromPath(UserKeys.profileImage, imageFile!.path));
     }
 
     multiPartRequest.headers.addAll(buildHeaderTokens());
@@ -264,7 +281,8 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         appStore.setLoading(false);
         if (data != null) {
           if ((data as String).isJson()) {
-            UserUpdateResponse res = UserUpdateResponse.fromJson(jsonDecode(data));
+            UserUpdateResponse res = UserUpdateResponse.fromJson(
+                jsonDecode(data));
 
             if (FirebaseAuth.instance.currentUser != null) {
               userService.updateDocument({
@@ -313,14 +331,16 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _getFromGallery() async {
-    pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 1800, maxHeight: 1800);
+    pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery, maxWidth: 1800, maxHeight: 1800);
     if (pickedFile != null) {
       _showSelectionDialog(context);
     }
   }
 
   _getFromCamera() async {
-    pickedFile = await ImagePicker().pickImage(source: ImageSource.camera, maxWidth: 1800, maxHeight: 1800);
+    pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.camera, maxWidth: 1800, maxHeight: 1800);
     if (pickedFile != null) {
       _showSelectionDialog(context);
     }
@@ -382,472 +402,551 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Observer(
-      builder: (_) => SafeArea(
-        child: Scaffold(
-          appBar: appBarWidget(
-            languages.editProfile,
-            textColor: white,
-            color: context.primaryColor,
-            backWidget: BackWidget(),
-            showBack: true,
-          ),
-          body: Stack(
-            children: [
-              RefreshIndicator(
-                onRefresh: () async {
-                  return await userDetailAPI();
-                },
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(16),
-                  child: Form(
-                    key: formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Column(
+      builder: (_) =>
+          SafeArea(
+            child: Scaffold(
+              appBar: appBarWidget(
+                languages.editProfile,
+                textColor: white,
+                color: context.primaryColor,
+                backWidget: BackWidget(),
+                showBack: true,
+              ),
+              body: Stack(
+                  children: [
+                  RefreshIndicator(
+                  onRefresh: () async {
+            return await userDetailAPI();
+            },
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(16),
+                child: Form(
+                  key: formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Align(
-                          child: Stack(
-                            children: [
-                              Container(
-                                decoration: boxDecorationDefault(
-                                  border: Border.all(color: context.scaffoldBackgroundColor, width: 4),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: imageFile != null
-                                    ? Image.file(imageFile!, width: 90, height: 90, fit: BoxFit.cover).cornerRadiusWithClipRRect(45)
-                                    : Observer(
-                                        builder: (_) => CachedImageWidget(
-                                          url: appStore.userProfileImage,
-                                          height: 100,
-                                          fit: BoxFit.cover,
-                                          radius: 64,
-                                        ),
-                                      ),
-                              ),
-                              Positioned(
-                                bottom: 4,
-                                right: 2,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  decoration: boxDecorationWithRoundedCorners(
-                                    boxShape: BoxShape.circle,
-                                    backgroundColor: primaryColor,
-                                    border: Border.all(color: Colors.white),
-                                  ),
-                                  child: Icon(AntDesign.camera, color: Colors.white, size: 16).paddingAll(4.0),
-                                ).onTap(() async {
-                                  _showBottomSheet(context);
-                                }),
-                              )
-                            ],
-                          ),
-                        ),
-                        16.height,
-                        AppTextField(
-                          textFieldType: TextFieldType.NAME,
-                          controller: fNameCont,
-                          focus: fNameFocus,
-                          nextFocus: lNameFocus,
-                          decoration: inputDecoration(context, hint: languages.hintFirstNameTxt),
-                          suffix: profile.iconImage(size: 10).paddingAll(14),
-                        ),
-                        16.height,
-                        AppTextField(
-                          textFieldType: TextFieldType.NAME,
-                          controller: lNameCont,
-                          focus: lNameFocus,
-                          nextFocus: userNameFocus,
-                          decoration: inputDecoration(context, hint: languages.hintLastNameTxt),
-                          suffix: profile.iconImage(size: 10).paddingAll(14),
-                        ),
-                        16.height,
-                        AppTextField(
-                          textFieldType: TextFieldType.NAME,
-                          controller: userNameCont,
-                          focus: userNameFocus,
-                          nextFocus: emailFocus,
-                          enabled: false,
-                          decoration: inputDecoration(context, hint: languages.hintUserNameTxt),
-                          suffix: profile.iconImage(size: 10).paddingAll(14),
-                        ),
-                        16.height,
-                        AppTextField(
-                          textFieldType: TextFieldType.EMAIL_ENHANCED,
-                          controller: emailCont,
-                          focus: emailFocus,
-                          nextFocus: mobileFocus,
-                          enabled: false,
-                          decoration: inputDecoration(context, hint: languages.hintEmailAddressTxt),
-                          suffix: ic_message.iconImage(size: 10).paddingAll(14),
-                          onFieldSubmitted: (email) async {
-                            if (emailCont.text.isNotEmpty) await verifyEmail();
-                          },
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: Wrap(
-                            spacing: 4,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            children: [
-                              Text(
-                                isEmailVerified.validate() ? languages.verified : languages.verifyEmail,
-                                style: isEmailVerified.validate() ? secondaryTextStyle(color: Colors.green) : secondaryTextStyle(),
-                              ),
-                              if (!isEmailVerified.validate())
-                                ic_pending.iconImage(color: Colors.amber, size: 14)
-                              else
-                                Icon(
-                                  isEmailVerified.validate() ? Icons.check_circle : Icons.refresh,
-                                  color: isEmailVerified.validate() ? Colors.green : Colors.grey,
-                                  size: 16,
-                                )
-                            ],
-                          ).paddingSymmetric(horizontal: 6).onTap(
-                            () {
-                              verifyEmail();
-                            },
-                            borderRadius: radius(),
-                          ),
-                        ).paddingSymmetric(vertical: 6),
-                        10.height,
-                        AppTextField(
-                          textFieldType: isAndroid ? TextFieldType.PHONE : TextFieldType.NAME,
-                          controller: mobileCont,
-                          focus: mobileFocus,
-                          decoration: inputDecoration(context, hint: languages.hintContactNumberTxt),
-                          suffix: calling.iconImage(size: 10).paddingAll(14),
-                          validator: (mobileCont) {
-                            if (mobileCont!.isEmpty) return languages.lblPleaseEnterMobileNumber;
-                            if (isIOS && !RegExp(r"^([0-9]{1,5})-([0-9]{1,10})$").hasMatch(mobileCont)) {
-                              return languages.inputMustBeNumberOrDigit;
-                            }
-                            if (!mobileCont.trim().contains('-')) return '"-" ${languages.requiredAfterCountryCode}';
-                            return null;
-                          },
-                          maxLength: 15,
-                        ),
-                        12.height,
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: mobileNumberInfoWidget(context),
-                        ),
-                        16.height,
-                        AppTextField(
-                          textFieldType: TextFieldType.NAME,
-                          controller: designationCont,
-                          isValidationRequired: false,
-                          focus: designationFocus,
-                          decoration: inputDecoration(context, hint: languages.lblDesignation),
-                        ),
-                        16.height,
-                        Row(
-                          children: [
-                            DropdownButtonFormField<CountryListResponse>(
-                              decoration: inputDecoration(context, hint: languages.selectCountry),
-                              isExpanded: true,
-                              menuMaxHeight: 300,
-                              value: selectedCountry,
-                              dropdownColor: context.cardColor,
-                              items: countryList.map((CountryListResponse e) {
-                                return DropdownMenuItem<CountryListResponse>(
-                                  value: e,
-                                  child: Text(e.name!, style: primaryTextStyle(), maxLines: 1, overflow: TextOverflow.ellipsis),
-                                );
-                              }).toList(),
-                              onChanged: (CountryListResponse? value) async {
-                                countryId = value!.id!;
-                                selectedCountry = value;
-                                selectedState = null;
-                                selectedCity = null;
-                                setState(() {});
-
-                                getStates(value.id!);
-                              },
-                            ).expand(),
-                            8.width.visible(stateList.isNotEmpty),
-                            if (stateList.isNotEmpty)
-                              DropdownButtonFormField<StateListResponse>(
-                                decoration: inputDecoration(context, hint: languages.selectState),
-                                isExpanded: true,
-                                dropdownColor: context.cardColor,
-                                menuMaxHeight: 300,
-                                value: selectedState,
-                                items: stateList.map((StateListResponse e) {
-                                  return DropdownMenuItem<StateListResponse>(
-                                    value: e,
-                                    child: Text(e.name!, style: primaryTextStyle(), maxLines: 1, overflow: TextOverflow.ellipsis),
-                                  );
-                                }).toList(),
-                                onChanged: (StateListResponse? value) async {
-                                  selectedCity = null;
-                                  selectedState = value;
-                                  stateId = value!.id!;
-                                  setState(() {});
-
-                                  getCity(value.id!);
-                                },
-                              ).expand(),
-                          ],
-                        ),
-                        16.height,
-                        if (cityList.isNotEmpty)
-                          Column(
-                            children: [
-                              DropdownButtonFormField<CityListResponse>(
-                                decoration: inputDecoration(context),
-                                hint: Text(languages.selectCity, style: primaryTextStyle()),
-                                isExpanded: true,
-                                menuMaxHeight: 400,
-                                value: selectedCity,
-                                dropdownColor: context.cardColor,
-                                items: cityList.map(
-                                  (CityListResponse e) {
-                                    return DropdownMenuItem<CityListResponse>(
-                                      value: e,
-                                      child: Text(e.name!, style: primaryTextStyle(), maxLines: 1, overflow: TextOverflow.ellipsis),
-                                    );
-                                  },
-                                ).toList(),
-                                onChanged: (CityListResponse? value) async {
-                                  selectedCity = value;
-                                  cityId = value!.id!;
-
-                                  setState(() {});
-                                },
-                              ),
-                              16.height,
-                            ],
-                          ),
-                        if (isUserTypeHandyman && serviceAddressList.isNotEmpty)
-                          DropdownButtonFormField<AddressResponse>(
-                            decoration: inputDecoration(context, hint: languages.lblSelectAddress),
-                            isExpanded: true,
-                            value: selectedAddress != null ? selectedAddress : null,
-                            dropdownColor: context.cardColor,
-                            items: serviceAddressList.map((AddressResponse data) {
-                              return DropdownMenuItem<AddressResponse>(
-                                value: data,
-                                child: Text(data.address.validate(), style: primaryTextStyle()),
-                              );
-                            }).toList(),
-                            onChanged: (AddressResponse? value) async {
-                              selectedAddress = value;
-                              serviceAddressId = selectedAddress!.id.validate();
-                              setState(() {});
-                            },
-                          ).paddingTop(16),
-                        if (isUserTypeHandyman && serviceAddressList.isNotEmpty) 16.height,
-                        AppTextField(
-                          controller: addressCont,
-                          textFieldType: TextFieldType.MULTILINE,
-                          maxLines: 5,
-                          focus: fNameFocus,
-                          nextFocus: lNameFocus,
-                          minLines: 3,
-                          decoration: inputDecoration(context, hint: languages.hintAddress),
-                        ),
-                        16.height,
-                        Text(languages.knownLanguages, style: secondaryTextStyle()),
-                        8.height,
-                        Wrap(
-                          children: knownLanguages.map((e) {
-                            return Stack(
-                              children: [
-                                Container(
-                                  decoration: boxDecorationWithRoundedCorners(
-                                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                                    backgroundColor: appStore.isDarkMode ? cardDarkColor : primaryColor.withOpacity(0.1),
-                                  ),
-                                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                  margin: EdgeInsets.all(4),
-                                  child: Text(e, style: primaryTextStyle()),
-                                ),
-                                Positioned(
-                                  right: 1,
-                                  child: Icon(
-                                    Icons.cancel,
-                                    color: Colors.red,
-                                  ).onTap(() {
-                                    knownLanguages.remove(e);
-                                    setState(() {});
-                                  }),
-                                ),
-                              ],
-                            );
-                          }).toList(),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            String? res = await showInDialog(
-                              context,
-                              contentPadding: EdgeInsets.zero,
-                              builder: (p0) {
-                                return AddKnownLanguagesComponent();
-                              },
-                            );
-
-                            if (res != null) {
-                              knownLanguages.add(res.trim());
-                              setState(() {});
-                            }
-                          },
-                          child: Text(languages.addKnownLanguage, style: primaryTextStyle(color: context.primaryColor)),
-                        ),
-                        16.height,
-                        Text(languages.essentialSkills, style: secondaryTextStyle()),
-                        8.height,
-                        Wrap(
-                          children: skills.map((e) {
-                            return Stack(
-                              children: [
-                                Container(
-                                  decoration: boxDecorationWithRoundedCorners(
-                                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                                    backgroundColor: appStore.isDarkMode ? cardDarkColor : primaryColor.withOpacity(0.1),
-                                  ),
-                                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                  margin: EdgeInsets.all(4),
-                                  child: Text(e, style: primaryTextStyle()),
-                                ),
-                                Positioned(
-                                  right: 1,
-                                  child: Icon(
-                                    Icons.cancel,
-                                    color: Colors.red,
-                                  ).onTap(() {
-                                    skills.remove(e);
-                                    setState(() {});
-                                  }),
-                                ),
-                              ],
-                            );
-                          }).toList(),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            String? res = await showInDialog(
-                              context,
-                              contentPadding: EdgeInsets.all(0),
-                              builder: (p0) {
-                                return AddSkillComponent();
-                              },
-                            );
-
-                            if (res != null) {
-                              skills.add(res.trim());
-                              setState(() {});
-                            }
-                          },
-                          child: Text(languages.addEssentialSkill, style: primaryTextStyle(color: context.primaryColor)),
-                        ),
-                        16.height,
-                        AppTextField(
-                          controller: whyChooseMeCont,
-                          textFieldType: TextFieldType.NAME,
-                          maxLines: 3,
-                          focus: whyChooseMeFocus,
-                          minLines: 2,
-                          enableChatGPT: appConfigurationStore.chatGPTStatus,
-                          promptFieldInputDecorationChatGPT: inputDecoration(context).copyWith(
-                            hintText: languages.writeHere,
-                            fillColor: context.scaffoldBackgroundColor,
-                            filled: true,
-                          ),
-                          testWithoutKeyChatGPT: appConfigurationStore.testWithoutKey,
-                          loaderWidgetForChatGPT: const ChatGPTLoadingWidget(),
-                          decoration: inputDecoration(context, hint: languages.writeShortLineAbout),
-                          isValidationRequired: false,
-                        ),
-                        16.height,
-                        AppTextField(
-                          controller: descriptionCont,
-                          textFieldType: TextFieldType.MULTILINE,
-                          maxLines: 5,
-                          minLines: 3,
-                          focus: descriptionFocus,
-                          nextFocus: whyChooseMeFocus,
-                          enableChatGPT: appConfigurationStore.chatGPTStatus,
-                          promptFieldInputDecorationChatGPT: inputDecoration(context).copyWith(
-                            hintText: languages.writeHere,
-                            fillColor: context.scaffoldBackgroundColor,
-                            filled: true,
-                          ),
-                          testWithoutKeyChatGPT: appConfigurationStore.testWithoutKey,
-                          loaderWidgetForChatGPT: const ChatGPTLoadingWidget(),
-                          decoration: inputDecoration(context, hint: languages.aboutYou),
-                          isValidationRequired: false,
-                        ),
-                        16.height,
-                        Text(languages.reasonsToChooseYour, style: secondaryTextStyle()),
-                        8.height,
-                        Wrap(
-                          children: whyChooseMeReasons.map((e) {
-                            return Stack(
-                              children: [
-                                Container(
-                                  decoration: boxDecorationWithRoundedCorners(
-                                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                                    backgroundColor: appStore.isDarkMode ? cardDarkColor : primaryColor.withOpacity(0.1),
-                                  ),
-                                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                  margin: EdgeInsets.all(4),
-                                  child: Text(e, style: primaryTextStyle()),
-                                ),
-                                Positioned(
-                                  right: 1,
-                                  child: Icon(
-                                    Icons.cancel,
-                                    color: Colors.red,
-                                  ).onTap(() {
-                                    whyChooseMeReasons.remove(e);
-                                    setState(() {});
-                                  }),
-                                ),
-                              ],
-                            );
-                          }).toList(),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            String? res = await showInDialog(
-                              context,
-                              contentPadding: EdgeInsets.zero,
-                              builder: (p0) {
-                                return AddReasonsComponent();
-                              },
-                            );
-
-                            if (res != null) {
-                              whyChooseMeReasons.add(res.trim());
-                              setState(() {});
-                            }
-                          },
-                          child: Text(languages.addReasons, style: primaryTextStyle(color: context.primaryColor)),
-                        ),
-                        28.height,
-                        AppButton(
-                          text: languages.saveChanges,
-                          height: 40,
-                          color: primaryColor,
-                          textStyle: boldTextStyle(color: white),
-                          width: context.width() - context.navigationBarHeight,
-                          onTap: () {
-                            ifNotTester(context, () {
-                              update();
-                            });
-                          },
-                        ),
-                        24.height,
-                      ],
-                    ),
-                  ),
+                  Align(
+                  child: Stack(
+                  children: [
+                      Container(
+                      decoration: boxDecorationDefault(
+                      border: Border.all(color: context.scaffoldBackgroundColor,
+                      width: 4),
+                  shape: BoxShape.circle,
+                ),
+                child: imageFile != null
+                    ? Image.file(
+                    imageFile!, width: 90, height: 90, fit: BoxFit.cover)
+                    .cornerRadiusWithClipRRect(45)
+                    : Observer(
+                  builder: (_) =>
+                      CachedImageWidget(
+                        url: appStore.userProfileImage,
+                        height: 100,
+                        fit: BoxFit.cover,
+                        radius: 64,
+                      ),
                 ),
               ),
-              Observer(builder: (_) => LoaderWidget().center().visible(appStore.isLoading)),
-            ],
+              Positioned(
+                bottom: 4,
+                right: 2,
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: boxDecorationWithRoundedCorners(
+                    boxShape: BoxShape.circle,
+                    backgroundColor: primaryColor,
+                    border: Border.all(color: Colors.white),
+                  ),
+                  child: Icon(AntDesign.camera, color: Colors.white, size: 16)
+                      .paddingAll(4.0),
+                ).onTap(() async {
+                  _showBottomSheet(context);
+                }),
+              )
+              ],
+            ),
+          ),
+      16.height,
+      AppTextField(
+        textFieldType: TextFieldType.NAME,
+        controller: fNameCont,
+        focus: fNameFocus,
+        nextFocus: lNameFocus,
+        decoration: inputDecoration(context, hint: languages.hintFirstNameTxt),
+        suffix: profile.iconImage(size: 10).paddingAll(14),
+      ),
+      16.height,
+      AppTextField(
+        textFieldType: TextFieldType.NAME,
+        controller: lNameCont,
+        focus: lNameFocus,
+        nextFocus: userNameFocus,
+        decoration: inputDecoration(context, hint: languages.hintLastNameTxt),
+        suffix: profile.iconImage(size: 10).paddingAll(14),
+      ),
+      16.height,
+      AppTextField(
+        textFieldType: TextFieldType.NAME,
+        controller: userNameCont,
+        focus: userNameFocus,
+        nextFocus: emailFocus,
+        enabled: false,
+        decoration: inputDecoration(context, hint: languages.hintUserNameTxt),
+        suffix: profile.iconImage(size: 10).paddingAll(14),
+      ),
+      16.height,
+      AppTextField(
+        textFieldType: TextFieldType.EMAIL_ENHANCED,
+        controller: emailCont,
+        focus: emailFocus,
+        nextFocus: mobileFocus,
+        enabled: false,
+        decoration: inputDecoration(
+            context, hint: languages.hintEmailAddressTxt),
+        suffix: ic_message.iconImage(size: 10).paddingAll(14),
+        onFieldSubmitted: (email) async {
+          if (emailCont.text.isNotEmpty) await verifyEmail();
+        },
+      ),
+      Align(
+        alignment: AlignmentDirectional.centerEnd,
+        child: Wrap(
+          spacing: 4,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(
+              isEmailVerified.validate() ? languages.verified : languages
+                  .verifyEmail,
+              style: isEmailVerified.validate() ? secondaryTextStyle(
+                  color: Colors.green) : secondaryTextStyle(),
+            ),
+            if (!isEmailVerified.validate())
+              ic_pending.iconImage(color: Colors.amber, size: 14)
+            else
+              Icon(
+                isEmailVerified.validate() ? Icons.check_circle : Icons.refresh,
+                color: isEmailVerified.validate() ? Colors.green : Colors.grey,
+                size: 16,
+              )
+          ],
+        ).paddingSymmetric(horizontal: 6).onTap(
+              () {
+            verifyEmail();
+          },
+          borderRadius: radius(),
+        ),
+      ).paddingSymmetric(vertical: 6),
+      10.height,
+      AppTextField(
+        textFieldType: isAndroid ? TextFieldType.PHONE : TextFieldType.NAME,
+        controller: mobileCont,
+        focus: mobileFocus,
+        decoration: inputDecoration(
+            context, hint: languages.hintContactNumberTxt),
+        suffix: calling.iconImage(size: 10).paddingAll(14),
+        validator: (mobileCont) {
+          if (mobileCont!.isEmpty) return languages.lblPleaseEnterMobileNumber;
+          if (isIOS &&
+              !RegExp(r"^([0-9]{1,5})-([0-9]{1,10})$").hasMatch(mobileCont)) {
+            return languages.inputMustBeNumberOrDigit;
+          }
+          if (!mobileCont.trim().contains('-'))
+            return '"-" ${languages.requiredAfterCountryCode}';
+          return null;
+        },
+        maxLength: 10,
+      ),
+      12.height,
+      /* Align(
+                          alignment: Alignment.centerRight,
+                          child: mobileNumberInfoWidget(context),
+                        ),*/
+      16.height,
+      AppTextField(
+        textFieldType: TextFieldType.NAME,
+        controller: designationCont,
+        isValidationRequired: false,
+        focus: designationFocus,
+        decoration: inputDecoration(context, hint: languages.lblDesignation),
+      ),
+      16.height,
+      Row(
+          children: [
+      //test
+      /*DropdownButtonFormField2<CountryListResponse>(
+      decoration: const InputDecoration(
+          labelText: 'Setor institucional'),
+      isExpanded: true,
+      icon: const Icon(Icons.arrow_downward),
+      items: snapshot.data!
+          .map((CountryListResponse rtItem) =>
+          DropdownMenuItem<CountryListResponse>(
+            value: rtItem,
+            child: Text(
+              '${rtItem.name} (${rtItem.name})',
+              softWrap: true,
+            ),
+          ))
+          .toList(),
+      hint: Text(
+          '${selectedCountryListResponse.nome} (${selectedCountryListResponse.sigla})'),
+      onChanged: (CountryListResponse? newValue) {
+        setState(() {
+          // Do your logic here!
+          selectedCountryListResponse = newValue;
+        });
+      },
+      // Search implementation using dropdown_button2 package
+      searchController: searchContentSetor,
+      searchInnerWidget: Padding(
+        padding: const EdgeInsets.only(
+          top: 8,
+          bottom: 4,
+          right: 8,
+          left: 8,
+        ),
+        child: TextFormField(
+          controller: searchContentSetor,
+          decoration: InputDecoration(
+            isDense: false,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 8,
+            ),
+            labelText: 'Setor institucional',
+            hintText: 'Parte do nome do setor...',
+            counterText: '',
+            hintStyle: const TextStyle(fontSize: 16),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         ),
       ),
+      searchMatchFn: (rtItem, searchValue) {
+        return (rtItem.value.nome
+            .toLowerCase()
+            .contains(searchValue.toLowerCase()));
+      },
+      //This to clear the search value when you close the menu
+      onMenuStateChange: (isOpen) {
+        if (!isOpen) {
+          searchContentSetor.clear();
+        }
+      },
+    ),*/
+    //test
+    DropdownButtonFormField<CountryListResponse>(
+      decoration: inputDecoration(context, hint: languages.selectCountry),
+      isExpanded: true,
+      menuMaxHeight: 300,
+      value: selectedCountry,
+      dropdownColor: context.cardColor,
+      items: countryList.map((CountryListResponse e) {
+        return DropdownMenuItem<CountryListResponse>(
+          value: e,
+          child: Text(e.name!, style: primaryTextStyle(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis),
+        );
+      }).toList(),
+      onChanged: (CountryListResponse? value) async {
+        countryId = value!.id!;
+        selectedCountry = value;
+        selectedState = null;
+        selectedCity = null;
+        setState(() {});
+
+        getStates(value.id!);
+      },
+    ).expand()
+    ,
+    8.width.visible(stateList.isNotEmpty),
+    if (stateList.isNotEmpty)
+    DropdownButtonFormField<StateListResponse>(
+    decoration: inputDecoration(context, hint: languages.selectState),
+    isExpanded: true,
+    dropdownColor: context.cardColor,
+    menuMaxHeight: 300,
+    value: selectedState,
+    items: stateList.map((StateListResponse e) {
+    return DropdownMenuItem<StateListResponse>(
+    value: e,
+    child: Text(e.name!, style: primaryTextStyle(), maxLines: 1, overflow: TextOverflow.ellipsis),
+    );
+    }).toList(),
+    onChanged: (StateListResponse? value) async {
+    selectedCity = null;
+    selectedState = value;
+    stateId = value!.id!;
+    setState(() {});
+
+    getCity(value.id!);
+    },
+    ).expand(),
+    ],
+    ),
+    16.height,
+    if (cityList.isNotEmpty)
+    Column(
+    children: [
+    DropdownButtonFormField<CityListResponse>(
+    decoration: inputDecoration(context),
+    hint: Text(languages.selectCity, style: primaryTextStyle()),
+    isExpanded: true,
+    menuMaxHeight: 400,
+    value: selectedCity,
+    dropdownColor: context.cardColor,
+    items: cityList.map(
+    (CityListResponse e) {
+    return DropdownMenuItem<CityListResponse>(
+    value: e,
+    child: Text(e.name!, style: primaryTextStyle(), maxLines: 1, overflow: TextOverflow.ellipsis),
+    );
+    },
+    ).toList(),
+    onChanged: (CityListResponse? value) async {
+    selectedCity = value;
+    cityId = value!.id!;
+
+    setState(() {});
+    },
+    ),
+    16.height,
+    ],
+    ),
+    if (isUserTypeHandyman && serviceAddressList.isNotEmpty)
+    DropdownButtonFormField<AddressResponse>(
+    decoration: inputDecoration(context, hint: languages.lblSelectAddress),
+    isExpanded: true,
+    value: selectedAddress != null ? selectedAddress : null,
+    dropdownColor: context.cardColor,
+    items: serviceAddressList.map((AddressResponse data) {
+    return DropdownMenuItem<AddressResponse>(
+    value: data,
+    child: Text(data.address.validate(), style: primaryTextStyle()),
+    );
+    }).toList(),
+    onChanged: (AddressResponse? value) async {
+    selectedAddress = value;
+    serviceAddressId = selectedAddress!.id.validate();
+    setState(() {});
+    },
+    ).paddingTop(16),
+    if (isUserTypeHandyman && serviceAddressList.isNotEmpty) 16.height,
+    AppTextField(
+    controller: addressCont,
+    textFieldType: TextFieldType.MULTILINE,
+    maxLines: 5,
+    focus: fNameFocus,
+    nextFocus: lNameFocus,
+    minLines: 3,
+    decoration: inputDecoration(context, hint: languages.hintAddress),
+    ),
+    16.height,
+    Text(languages.knownLanguages, style: secondaryTextStyle()),
+    8.height,
+    Wrap(
+    children: knownLanguages.map((e) {
+    return Stack(
+    children: [
+    Container(
+    decoration: boxDecorationWithRoundedCorners(
+    borderRadius: BorderRadius.all(Radius.circular(16)),
+    backgroundColor: appStore.isDarkMode ? cardDarkColor : primaryColor.withOpacity(0.1),
+    ),
+    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    margin: EdgeInsets.all(4),
+    child: Text(e, style: primaryTextStyle()),
+    ),
+    Positioned(
+    right: 1,
+    child: Icon(
+    Icons.cancel,
+    color: Colors.red,
+    ).onTap(() {
+    knownLanguages.remove(e);
+    setState(() {});
+    }),
+    ),
+    ],
+    );
+    }).toList(),
+    ),
+    TextButton(
+    onPressed: () async {
+    String? res = await showInDialog(
+    context,
+    contentPadding: EdgeInsets.zero,
+    builder: (p0) {
+    return AddKnownLanguagesComponent();
+    },
+    );
+
+    if (res != null) {
+    knownLanguages.add(res.trim());
+    setState(() {});
+    }
+    },
+    child: Text(languages.addKnownLanguage, style: primaryTextStyle(color: context.primaryColor)),
+    ),
+    16.height,
+    Text(languages.essentialSkills, style: secondaryTextStyle()),
+    8.height,
+    Wrap(
+    children: skills.map((e) {
+    return Stack(
+    children: [
+    Container(
+    decoration: boxDecorationWithRoundedCorners(
+    borderRadius: BorderRadius.all(Radius.circular(16)),
+    backgroundColor: appStore.isDarkMode ? cardDarkColor : primaryColor.withOpacity(0.1),
+    ),
+    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    margin: EdgeInsets.all(4),
+    child: Text(e, style: primaryTextStyle()),
+    ),
+    Positioned(
+    right: 1,
+    child: Icon(
+    Icons.cancel,
+    color: Colors.red,
+    ).onTap(() {
+    skills.remove(e);
+    setState(() {});
+    }),
+    ),
+    ],
+    );
+    }).toList(),
+    ),
+    TextButton(
+    onPressed: () async {
+    String? res = await showInDialog(
+    context,
+    contentPadding: EdgeInsets.all(0),
+    builder: (p0) {
+    return AddSkillComponent();
+    },
+    );
+
+    if (res != null) {
+    skills.add(res.trim());
+    setState(() {});
+    }
+    },
+    child: Text(languages.addEssentialSkill, style: primaryTextStyle(color: context.primaryColor)),
+    ),
+    16.height,
+    AppTextField(
+    controller: whyChooseMeCont,
+    textFieldType: TextFieldType.NAME,
+    maxLines: 3,
+    focus: whyChooseMeFocus,
+    minLines: 2,
+    enableChatGPT: appConfigurationStore.chatGPTStatus,
+    promptFieldInputDecorationChatGPT: inputDecoration(context).copyWith(
+    hintText: languages.writeHere,
+    fillColor: context.scaffoldBackgroundColor,
+    filled: true,
+    ),
+    testWithoutKeyChatGPT: appConfigurationStore.testWithoutKey,
+    loaderWidgetForChatGPT: const ChatGPTLoadingWidget(),
+    decoration: inputDecoration(context, hint: languages.writeShortLineAbout),
+    isValidationRequired: false,
+    ),
+    16.height,
+    AppTextField(
+    controller: descriptionCont,
+    textFieldType: TextFieldType.MULTILINE,
+    maxLines: 5,
+    minLines: 3,
+    focus: descriptionFocus,
+    nextFocus: whyChooseMeFocus,
+    enableChatGPT: appConfigurationStore.chatGPTStatus,
+    promptFieldInputDecorationChatGPT: inputDecoration(context).copyWith(
+    hintText: languages.writeHere,
+    fillColor: context.scaffoldBackgroundColor,
+    filled: true,
+    ),
+    testWithoutKeyChatGPT: appConfigurationStore.testWithoutKey,
+    loaderWidgetForChatGPT: const ChatGPTLoadingWidget(),
+    decoration: inputDecoration(context, hint: languages.aboutYou),
+    isValidationRequired: false,
+    ),
+    16.height,
+    Text(languages.reasonsToChooseYour, style: secondaryTextStyle()),
+    8.height,
+    Wrap(
+    children: whyChooseMeReasons.map((e) {
+    return Stack(
+    children: [
+    Container(
+    decoration: boxDecorationWithRoundedCorners(
+    borderRadius: BorderRadius.all(Radius.circular(16)),
+    backgroundColor: appStore.isDarkMode ? cardDarkColor : primaryColor.withOpacity(0.1),
+    ),
+    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    margin: EdgeInsets.all(4),
+    child: Text(e, style: primaryTextStyle()),
+    ),
+    Positioned(
+    right: 1,
+    child: Icon(
+    Icons.cancel,
+    color: Colors.red,
+    ).onTap(() {
+    whyChooseMeReasons.remove(e);
+    setState(() {});
+    }),
+    ),
+    ],
+    );
+    }).toList(),
+    ),
+    TextButton(
+    onPressed: () async {
+    String? res = await showInDialog(
+    context,
+    contentPadding: EdgeInsets.zero,
+    builder: (p0) {
+    return AddReasonsComponent();
+    },
+    );
+
+    if (res != null) {
+    whyChooseMeReasons.add(res.trim());
+    setState(() {});
+    }
+    },
+    child: Text(languages.addReasons, style: primaryTextStyle(color: context.primaryColor)),
+    ),
+    28.height,
+    AppButton(
+    text: languages.saveChanges,
+    height: 40,
+    color: primaryColor,
+    textStyle: boldTextStyle(color: white),
+    width: context.width() - context.navigationBarHeight,
+    onTap: () {
+    ifNotTester(context, () {
+    update();
+    });
+    },
+    ),
+    24.height,
+    ],
+    ),
+    ),
+    ),
+    ),
+    Observer(builder: (_) => LoaderWidget().center().visible(appStore.isLoading)),
+    ],
+    ),
+    ),
+    ),
     );
   }
 }

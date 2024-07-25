@@ -154,6 +154,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           focus: userNameFocus,
           nextFocus: emailFocus,
           errorThisFieldRequired: languages.hintRequired,
+          isValidationRequired: false,
           decoration: inputDecoration(context, hint: languages.hintUserNameTxt),
           suffix: profile.iconImage(size: 10).paddingAll(14),
         ),
@@ -164,6 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           focus: emailFocus,
           nextFocus: mobileFocus,
           errorThisFieldRequired: languages.hintRequired,
+          isValidationRequired: false,
           decoration: inputDecoration(context, hint: languages.hintEmailAddressTxt),
           suffix: ic_message.iconImage(size: 10).paddingAll(14),
         ),
@@ -172,7 +174,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           textFieldType: isAndroid ? TextFieldType.PHONE : TextFieldType.NAME,
           controller: mobileCont,
           focus: mobileFocus,
-          isValidationRequired: false,
           buildCounter: (_, {required int currentLength, required bool isFocused, required int? maxLength}) {
             /*return TextButton(
               child: Text(languages.lblChangeCountry, style: primaryTextStyle(size: 12)),
@@ -188,7 +189,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             hintStyle: secondaryTextStyle(),
             prefixText: '+${selectedCountry.phoneCode} ',
           ),
-          maxLength: 15,
+          maxLength: 10,
           suffix: calling.iconImage(size: 10).paddingAll(14),
         ),
         16.height,
@@ -379,7 +380,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               style: boldTextStyle(color: primaryColor),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  launch.launchUrl(Uri.parse(TERMS_CONDITION_URL));
+                  checkIfLink(context, appConfigurationStore.termConditions, title: languages.lblTermsAndConditions);
+                 // launch.launchUrl(Uri.parse(TERMS_CONDITION_URL));
                 },
             ),
             TextSpan(text: ' & ', style: secondaryTextStyle()),
@@ -388,7 +390,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               style: boldTextStyle(color: primaryColor),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  launch.launchUrl(Uri.parse(PRIVACY_POLICY_URL));
+                  checkIfLink(context, appConfigurationStore.privacyPolicy, title: languages.lblPrivacyPolicy);
+                  //launch.launchUrl(Uri.parse(PRIVACY_POLICY_URL));
                 },
             ),
           ],
